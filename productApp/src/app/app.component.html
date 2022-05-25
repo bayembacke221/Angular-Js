@@ -1,0 +1,211 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" style="color:white;">Product Manager</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarColor02">
+     <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+           <a class="nav-link" (click)="onOpenModal(null, 'add')">Add Product <span class="sr-only">(current)</span></a>
+        </li>
+     </ul>
+     <form class="form-inline my-2 my-lg-0">
+      <input type="search" (ngModelChange)="searchProduct(key.value)" #key="ngModel" ngModel
+       name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search product.." required>
+   </form>
+  </div>
+</nav>
+<hr>
+<div class="container bootstrap snippets bootdey">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="main-box no-header clearfix">
+                <div class="main-box-body clearfix">
+                    <div class="table-responsive">
+                        <table class="table user-list">
+                            <thead>
+                                <tr>
+                                <th><span>Nom</span></th>
+                                <th><span>Description</span></th>
+                                <th class="text-center"><span>Categories</span></th>
+                                <th><span>Prix</span></th>
+                                <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody id="main-container">
+                                <tr *ngFor="let product of products">
+                                    <td>
+                                        {{product.nom}}
+                                    </td>
+                                    <td> {{product.description}}</td>
+                                    <td >
+                                       {{product?.categories}}
+                                    </td>
+                                    <td>
+                                         {{product.prix}}
+                                    </td>
+                                    <td style="width: 20%;">
+                                        <a href="#" class="table-link text-warning">
+                                            <span class="fa-stack">
+                                                <i class="fa fa-square fa-stack-2x"></i>
+                                                <i class="fa fa-search-plus fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                        <a href="#" (click)="onOpenModal(product, 'edit')"
+                                        class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"
+                                        class="table-link text-info">
+                                          
+                                            <span class="fa-stack">
+                                                <i class="fa fa-square fa-stack-2x"></i>
+                                                <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                        <a href="#" (click)="onOpenModal(product, 'delete')"
+                                        class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"
+                                        class="table-link danger">
+                                            <span class="fa-stack">
+                                                <i class="fa fa-square fa-stack-2x"></i>
+                                                <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                    </td>
+                                </tr>
+                               
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Employee Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+       <div class="modal-header">
+          <h5 class="modal-title" id="addProductModalLabel">Add Product</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+       </div>
+       <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="onAddProduct(addForm)">
+          <div class="form-group">
+             <label for="nom">Nom</label>
+             <input type="text" ngModel name="nom" class="form-control" id="name" placeholder="Nom" required>
+          </div>
+          <div class="form-group">
+             <label for="description">Description</label>
+             <input type="text" ngModel name="description" class="form-control" id="email" placeholder="Description" required>
+          </div>
+          <div class="form-group">
+             <label for="categorie">Categories</label>
+             <input type="text" ngModel name="categorie" class="form-control" id="jobTile" placeholder="Categorie" required>
+          </div>
+          <div class="form-group">
+             <label for="prix">Prix</label>
+             <input type="text" ngModel name="prix" class="form-control" id="phone" placeholder="Prix" required>
+          </div>
+         
+          <div class="modal-footer">
+             <button type="button" id="add-product-form" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+             <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Enregistrer</button>
+          </div>
+          </form>
+       </div>
+    </div>
+  </div>
+  </div>
+  <!-- Edit Modal -->
+<div class="modal fade" id="updateProductModal" tabindex="-1" role="dialog" aria-labelledby="prodcutEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="updateProductModalLabel">Edit Product {{editProduct?.nom}}</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+           <form #editForm="ngForm">
+              <div class="form-group">
+                 <label for="nom">Nom</label>
+                 <input type="text" ngModel="{{editProduct?.nom}}" name="nom" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Nom">
+              </div>
+              <input type="hidden" ngModel="{{editProduct?.id}}" name="id" class="form-control" id="id" placeholder="Email">
+              <div class="form-group">
+                 <label for="email">Description</label>
+                 <input type="description" ngModel="{{editProduct?.description}}" name="description" class="form-control" id="email" placeholder="Description">
+              </div>
+              <div class="form-group">
+                 <label for="categories">Categories</label>
+                 <input type="text" ngModel="{{editProduct?.categories}}" name="categories" class="form-control" id="categories" placeholder="Categories">
+              </div>
+              <div class="form-group">
+                 <label for="prix">Prix</label>
+                 <input type="text" ngModel="{{editProduct?.prix}}" name="prix" class="form-control" id="prix" placeholder="Prix">
+              </div>
+              
+              <div class="modal-footer">
+                 <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                 <button (click)="onUpdateProduct(editForm.value)" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
+              </div>
+           </form>
+        </div>
+     </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="deleteModelLabel">Delete Product</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+           <p>Are you sure you want to delete product {{deleteProduct?.nom}}?</p>
+           <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+              <button (click)="onDeleteProduct(deleteProduct?.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Notification for no products -->
+<div class="col-lg-12 col-md-12 col-xl-12">
+  <div class="alert alert-info" role="alert">
+    <h4 class="alert-heading">NO PRODUCTS!</h4>
+    <p>No Products were found.</p>
+  </div>
+  </div>
